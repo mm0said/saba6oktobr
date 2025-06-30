@@ -44,15 +44,11 @@
             background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
             color: var(--text-color);
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
         }
 
         .container {
             max-width: 900px;
             margin: auto;
-            width: 100%;
-            flex-grow: 1;
         }
 
         .main-title {
@@ -221,27 +217,16 @@
             font-weight: 500;
         }
 
-        /* Footer Style */
-        .footer {
+        /* ========== START: CSS for Footer (Signature) ========== */
+        .page-footer {
             text-align: center;
-            padding: 1.5rem;
-            margin-top: 2rem;
-            color: var(--text-light-color);
+            margin-top: 3rem;
+            padding: 1rem 0;
             font-size: 0.9rem;
-            animation: fadeInUp 1.5s ease-out;
-        }
-        .footer p {
-            margin: 0.25rem 0;
-        }
-        .footer a {
-            color: var(--primary-color);
-            text-decoration: none;
+            color: var(--text-light-color);
             font-weight: 500;
         }
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
+        /* ========== END: CSS for Footer (Signature) ========== */
 
         @media (max-width: 768px) {
             body { padding: 1rem; }
@@ -321,12 +306,15 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <footer class="footer">
-        <p>تطوير: المهندس محمد سعيد | <a href="tel:01000023099">01000023099</a></p>
-        <p>من ملاك الكمبوند</p>
-    </footer>
+        <!-- ========== START: Signature (Footer) ========== -->
+        <footer class="page-footer">
+            تطوير المهندس محمد سعيد 01000023099
+            <br>
+            من ملاك الكمبوند
+        </footer>
+        <!-- ========== END: Signature (Footer) ========== -->
+    </div>
 
     <!-- ========== Start of JavaScript Code ========== -->
     <script>
@@ -385,9 +373,9 @@
                             excellenceRatio: safeParseFloat(getCellValue(9)), cashPrice: safeParseFloat(getCellValue(8)),
                             jeddiyetHajz: safeParseInt(getCellValue(7)),
                             paymentPlans: {
-                                years7: { completion: safeParseFloat(getCellValue(2)), installment: safeParseFloat(getCellValue(1)) },
-                                years5: { completion: safeParseFloat(getCellValue(4)), installment: safeParseFloat(getCellValue(3)) },
-                                years3: { completion: safeParseFloat(getCellValue(6)), installment: safeParseFloat(getCellValue(5)) }
+                                years7: { installment: safeParseFloat(getCellValue(2)), completion: safeParseFloat(getCellValue(1)) },
+                                years5: { installment: safeParseFloat(getCellValue(4)), completion: safeParseFloat(getCellValue(3)) },
+                                years3: { installment: safeParseFloat(getCellValue(6)), completion: safeParseFloat(getCellValue(5)) }
                             }
                         };
                     });
