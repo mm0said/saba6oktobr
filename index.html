@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام البحث عن الوحدات</title>
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- ========== Start of CSS Styles ========== -->
+    <style>
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #00d2ff;
+            --text-color: #333;
+            --text-light-color: #555;
+            --surface-color: rgba(255, 255, 255, 0.2);
+            --border-color: rgba(255, 255, 255, 0.3);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --border-radius: 15px;
+            --backdrop-blur: 10px;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            margin: 0;
+            padding: 2rem 1rem;
+            background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 2rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+        
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            backdrop-filter: blur(var(--backdrop-blur));
+            -webkit-backdrop-filter: blur(var(--backdrop-blur));
+        }
+
+        .search-card {
+            animation: fadeInDown 1s ease-out;
+        }
+
+        h2, h3 {
+            font-weight: 700;
+            margin: 0 0 1.5rem 0;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+        }
+
+        h2 i, h3 i {
+            margin-left: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .search-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 1.5rem;
+            align-items: flex-end;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-light-color);
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.9rem;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: var(--text-color);
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(58, 123, 213, 0.2);
+            background-color: #fff;
+        }
+
+        #search-button {
+            padding: 0.9rem 2rem;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+        }
+        #search-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+        }
+        #search-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .results-hidden { display: none; }
+
+        #results-container .card {
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+        }
+        .details-grid p {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            margin: 0;
+            font-size: 0.95rem;
+            border: 1px solid var(--border-color);
+        }
+        .details-grid p strong {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        .payment-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .plan-card {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px var(--shadow-color);
+        }
+        .plan-card h4 {
+            border: none;
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+        }
+        .plan-card p {
+            margin: 0.25rem 0;
+            font-size: 0.9rem;
+            color: var(--text-light-color);
+        }
+        .plan-card .price {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+        
+        .message-card {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        #error-message p {
+            color: #d9534f;
+            font-weight: 500;
+        }
+        #loading-message p {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .main-title { font-size: 2rem; }
+            .search-box { grid-template-columns: 1fr; }
+            .card { padding: 1.5rem; }
+            .details-grid, .payment-plans { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="main-title"><i class="fas fa-search-location"></i> نظام الاستعلام عن الوحدات</h1>
+
+        <div class="card search-card">
+            <div class="search-box">
+                <div class="input-group">
+                    <label for="building-number">رقم العمارة</label>
+                    <input type="number" id="building-number" placeholder="أدخل رقم العمارة...">
+                </div>
+                <div class="input-group">
+                    <label for="unit-number">رقم الوحدة</label>
+                    <input type="number" id="unit-number" placeholder="أدخل رقم الوحدة...">
+                </div>
+                <button id="search-button">بحث</button>
+            </div>
+        </div>
+
+        <div id="loading-message" class="card message-card">
+            <p><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</p>
+        </div>
+        
+        <div id="error-message" class="card message-card error-hidden">
+             <p></p>
+        </div>
+
+        <div id="results-container" class="results-hidden">
+            <div class="card">
+                <h3><i class="fas fa-info-circle"></i> تفاصيل الوحدة</h3>
+                <div class="details-grid">
+                    <p><strong>المدينة:</strong> <span id="res-city"></span></p>
+                    <p><strong>المنطقة:</strong> <span id="res-area"></span></p>
+                    <p><strong>العمارة:</strong> <span id="res-building-number"></span></p>
+                    <p><strong>الوحدة:</strong> <span id="res-unit-number"></span></p>
+                    <p><strong>الدور:</strong> <span id="res-floor"></span></p>
+                    <p><strong>المساحة:</strong> <span id="res-space"></span> م²</p>
+                    <p><strong>نسبة التميز:</strong> <span id="res-excellence-ratio"></span></p>
+                    <p><strong>جدية الحجز:</strong> <span id="res-jeddiyet-hajz"></span></p>
+                </div>
+            </div>
+            <div class="card">
+                 <h3><i class="fas fa-wallet"></i> خطط السداد</h3>
+                <div class="payment-plans">
+                     <div class="plan-card">
+                        <h4>السداد النقدي</h4>
+                        <p class="price"><span id="res-cash-price"></span> جنيه</p>
+                    </div>
+                    <div class="plan-card">
+                        <h4>تقسيط 7 سنوات</h4>
+                        <p>قسط ربع سنوي</p>
+                        <p class="price"><span id="res-7y-installment"></span> جنيه</p>
+                        <p>استكمال: <span id="res-7y-completion"></span></p>
+                    </div>
+                    <div class="plan-card">
+                        <h4>تقسيط 5 سنوات</h4>
+                        <p>قسط ربع سنوي</p>
+                        <p class="price"><span id="res-5y-installment"></span> جنيه</p>
+                        <p>استكمال: <span id="res-5y-completion"></span></p>
+                    </div>
+                    <div class="plan-card">
+                        <h4>تقسيط 3 سنوات</h4>
+                        <p>قسط ربع سنوي</p>
+                        <p class="price"><span id="res-3y-installment"></span> جنيه</p>
+                        <p>استكمال: <span id="res-3y-completion"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== Start of JavaScript Code ========== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const SHEET_ID = '1wHYTWUIz7Effv6vUyiCWDddRLgiYVxsLsqOlvZHBZ9A';
+            const SHEET_TITLE = 'Page1';
+            const FULL_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${SHEET_TITLE}`;
+
+            let apartmentData = [];
+
+            const buildingInput = document.getElementById('building-number');
+            const unitInput = document.getElementById('unit-number');
+            const searchButton = document.getElementById('search-button');
+            const resultsContainer = document.getElementById('results-container');
+            const errorMessage = document.getElementById('error-message');
+            const loadingMessage = document.getElementById('loading-message');
+
+            const fetchData = async () => {
+                searchButton.disabled = true;
+                errorMessage.classList.add('error-hidden');
+                loadingMessage.style.display = 'block';
+
+                try {
+                    const response = await fetch(FULL_URL);
+                    const text = await response.text();
+                    
+                    const json = JSON.parse(text.substring(47).slice(0, -2));
+                    const rows = json.table.rows;
+
+                    apartmentData = rows.map(row => {
+                        const cells = row.c;
+                        const getCellValue = (index) => (cells[index] && cells[index].v !== null) ? cells[index].v : '';
+                        
+                        const safeParseFloat = (value) => {
+                            if (typeof value === 'number') return value;
+                            if (typeof value === 'string' && value.trim() !== '') {
+                                const num = parseFloat(value.replace(/,/g, ''));
+                                return isNaN(num) ? null : num;
+                            }
+                            return null;
+                        };
+
+                        const safeParseInt = (value) => {
+                            if (typeof value === 'number') return value;
+                            if (typeof value === 'string' && value.trim() !== '') {
+                                const num = parseInt(value.replace(/,/g, ''), 10);
+                                return isNaN(num) ? null : num;
+                            }
+                            return null;
+                        };
+
+                        return {
+                            city: getCellValue(15), area: getCellValue(14),
+                            buildingNumber: safeParseInt(getCellValue(13)), unitNumber: safeParseInt(getCellValue(12)),
+                            floor: getCellValue(11), space: safeParseInt(getCellValue(10)),
+                            excellenceRatio: safeParseFloat(getCellValue(9)), cashPrice: safeParseFloat(getCellValue(8)),
+                            jeddiyetHajz: safeParseInt(getCellValue(7)),
+                            paymentPlans: {
+                                years3: { completion: safeParseFloat(getCellValue(6)), installment: safeParseFloat(getCellValue(5)) },
+                                years5: { completion: safeParseFloat(getCellValue(4)), installment: safeParseFloat(getCellValue(3)) },
+                                years7: { completion: safeParseFloat(getCellValue(2)), installment: safeParseFloat(getCellValue(1)) }
+                            }
+                        };
+                    });
+
+                    loadingMessage.style.display = 'none';
+                    searchButton.disabled = false;
+                    
+                } catch (error) {
+                    console.error('فشل في جلب البيانات من جوجل شيت:', error);
+                    loadingMessage.style.display = 'none';
+                    errorMessage.querySelector('p').innerHTML = `<i class="fas fa-exclamation-triangle"></i> فشل في تحميل البيانات. تأكد من نشر الملف على الويب بشكل صحيح وأن لديك اتصال بالإنترنت.`;
+                    errorMessage.classList.remove('error-hidden');
+                }
+            };
+
+            const handleSearch = () => {
+                const buildingNum = parseInt(buildingInput.value);
+                const unitNum = parseInt(unitInput.value);
+
+                resultsContainer.classList.add('results-hidden'); // إخفاء النتائج القديمة قبل البحث
+
+                if (!buildingNum || !unitNum) {
+                    errorMessage.querySelector('p').innerHTML = '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال رقم العمارة ورقم الشقة.';
+                    errorMessage.classList.remove('error-hidden');
+                    return;
+                }
+
+                const foundApartment = apartmentData.find(apt => 
+                    apt.buildingNumber === buildingNum && apt.unitNumber === unitNum
+                );
+
+                if (foundApartment) {
+                    displayResults(foundApartment);
+                    errorMessage.classList.add('error-hidden');
+                    setTimeout(() => { // تأخير بسيط لإعطاء فرصة للحركة
+                         resultsContainer.classList.remove('results-hidden');
+                    }, 100);
+                } else {
+                    errorMessage.querySelector('p').innerHTML = '<i class="fas fa-exclamation-triangle"></i> لم يتم العثور على الوحدة المطلوبة. يرجى التأكد من الأرقام المدخلة.';
+                    errorMessage.classList.remove('error-hidden');
+                }
+            };
+            
+            const displayResults = (data) => {
+                const formatNumber = (num) => (num !== null && !isNaN(num)) ? num.toLocaleString('en-US') : 'غير متاح';
+            
+                document.getElementById('res-city').textContent = data.city || 'N/A';
+                document.getElementById('res-area').textContent = data.area || 'N/A';
+                document.getElementById('res-building-number').textContent = data.buildingNumber || 'N/A';
+                document.getElementById('res-unit-number').textContent = data.unitNumber || 'N/A';
+                document.getElementById('res-floor').textContent = data.floor || 'N/A';
+                document.getElementById('res-space').textContent = formatNumber(data.space);
+                document.getElementById('res-excellence-ratio').textContent = data.excellenceRatio || 'N/A';
+                document.getElementById('res-jeddiyet-hajz').textContent = formatNumber(data.jeddiyetHajz);
+                document.getElementById('res-cash-price').textContent = formatNumber(data.cashPrice);
+                
+                document.getElementById('res-3y-completion').textContent = formatNumber(data.paymentPlans.years3.completion);
+                document.getElementById('res-3y-installment').textContent = formatNumber(data.paymentPlans.years3.installment);
+            
+                document.getElementById('res-5y-completion').textContent = formatNumber(data.paymentPlans.years5.completion);
+                document.getElementById('res-5y-installment').textContent = formatNumber(data.paymentPlans.years5.installment);
+            
+                document.getElementById('res-7y-completion').textContent = formatNumber(data.paymentPlans.years7.completion);
+                document.getElementById('res-7y-installment').textContent = formatNumber(data.paymentPlans.years7.installment);
+            };
+
+            searchButton.addEventListener('click', handleSearch);
+            unitInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleSearch());
+            buildingInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    unitInput.focus();
+                }
+            });
+
+            fetchData();
+        });
+    </script>
+</body>
+</html>
