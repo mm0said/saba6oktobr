@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام البحث عن الوحدات</title>
-    
+
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
-    
+
     <!-- ========== Start of CSS Styles ========== -->
     <style>
         :root {
@@ -59,7 +59,7 @@
             margin-bottom: 2rem;
             animation: fadeInDown 0.8s ease-out;
         }
-        
+
         .card {
             background: var(--surface-color);
             border-radius: var(--border-radius);
@@ -145,8 +145,8 @@
             transform: none;
             box-shadow: none;
         }
-        
-        .results-hidden { display: none; }
+
+        .results-hidden, .message-hidden { display: none; }
 
         #results-container .card {
             animation: fadeInUp 1s ease-out;
@@ -164,6 +164,7 @@
             margin: 0;
             font-size: 0.95rem;
             border: 1px solid var(--border-color);
+            word-break: break-word; /* Prevent long text overflow */
         }
         .details-grid p strong {
             color: var(--primary-color);
@@ -192,29 +193,41 @@
             border: none;
             margin: 0 0 1rem 0;
             font-size: 1.1rem;
+            color: var(--primary-color);
         }
+         .plan-card h4 i {
+             margin-right: 8px;
+             color: var(--primary-color);
+         }
         .plan-card p {
-            margin: 0.25rem 0;
+            margin: 0.5rem 0;
             font-size: 0.9rem;
             color: var(--text-light-color);
+            word-break: break-word;
         }
         .plan-card .price {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--primary-color);
-            margin: 0.5rem 0;
+            color: #28a745; /* Green color for price */
+            margin: 0.75rem 0;
         }
-        
+
         .message-card {
             animation: fadeInUp 0.5s ease-out;
+            text-align: center;
         }
         #error-message p {
             color: #d9534f;
             font-weight: 500;
+            margin: 0;
         }
         #loading-message p {
             color: var(--primary-color);
             font-weight: 500;
+            margin: 0;
+        }
+        .message-card i {
+             margin-left: 8px;
         }
 
         /* ========== START: CSS for Footer (Signature) ========== */
@@ -256,14 +269,20 @@
             </div>
         </div>
 
-        <div id="loading-message" class="card message-card">
-            <p><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</p>
+        <!-- Message Cards (Initially hidden or loading) -->
+        <div id="loading-message" class="card message-card message-hidden">
+            <p><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات الأولية...</p>
         </div>
-        
-        <div id="error-message" class="card message-card error-hidden">
+
+        <div id="initial-message" class="card message-card">
+             <p><i class="fas fa-info-circle"></i> الرجاء إدخال رقم العمارة ورقم الوحدة للبحث عن التفاصيل.</p>
+        </div>
+
+        <div id="error-message" class="card message-card message-hidden">
              <p></p>
         </div>
 
+        <!-- Results Container (Initially hidden) -->
         <div id="results-container" class="results-hidden">
             <div class="card">
                 <h3><i class="fas fa-info-circle"></i> تفاصيل الوحدة</h3>
@@ -281,27 +300,31 @@
             <div class="card">
                  <h3><i class="fas fa-wallet"></i> خطط السداد</h3>
                 <div class="payment-plans">
+                    <!-- Cash Plan (Kept first) -->
                      <div class="plan-card">
-                        <h4>السداد النقدي</h4>
+                        <h4><i class="fas fa-money-bill-wave"></i> السداد النقدي</h4>
                         <p class="price"><span id="res-cash-price"></span> جنيه</p>
                     </div>
+                    <!-- 3 Years Plan (Moved here) -->
                     <div class="plan-card">
-                        <h4>تقسيط 7 سنوات</h4>
+                        <h4><i class="fas fa-calendar-alt"></i> تقسيط 3 سنوات</h4>
                         <p>قسط ربع سنوي</p>
-                        <p class="price"><span id="res-7y-installment"></span> جنيه</p>
-                        <p>استكمال: <span id="res-7y-completion"></span></p>
+                        <p class="price"><span id="res-3y-installment"></span> جنيه</p>
+                        <p>استكمال: <span id="res-3y-completion"></span></p>
                     </div>
+                    <!-- 5 Years Plan (Moved here) -->
                     <div class="plan-card">
-                        <h4>تقسيط 5 سنوات</h4>
+                        <h4><i class="fas fa-calendar-alt"></i> تقسيط 5 سنوات</h4>
                         <p>قسط ربع سنوي</p>
                         <p class="price"><span id="res-5y-installment"></span> جنيه</p>
                         <p>استكمال: <span id="res-5y-completion"></span></p>
                     </div>
+                    <!-- 7 Years Plan (Moved here) -->
                     <div class="plan-card">
-                        <h4>تقسيط 3 سنوات</h4>
+                        <h4><i class="fas fa-calendar-alt"></i> تقسيط 7 سنوات</h4>
                         <p>قسط ربع سنوي</p>
-                        <p class="price"><span id="res-3y-installment"></span> جنيه</p>
-                        <p>استكمال: <span id="res-3y-completion"></span></p>
+                        <p class="price"><span id="res-7y-installment"></span> جنيه</p>
+                        <p>استكمال: <span id="res-7y-completion"></span></p>
                     </div>
                 </div>
             </div>
@@ -319,8 +342,11 @@
     <!-- ========== Start of JavaScript Code ========== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // تأكد من أن SHEET_ID و SHEET_TITLE صحيحين لملفك
             const SHEET_ID = '1wHYTWUIz7Effv6vUyiCWDddRLgiYVxsLsqOlvZHBZ9A';
-            const SHEET_TITLE = 'Page1';
+            const SHEET_TITLE = 'Page1'; // أو اسم الشيت الذي يحتوي على البيانات
+            // استخدام رابط Google Visualization API للحصول على JSON
+            // للتأكد من اسم الشيت الصحيح في الرابط: gviz/tq?sheet=اسم_الشيت_هنا
             const FULL_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${SHEET_TITLE}`;
 
             let apartmentData = [];
@@ -331,125 +357,201 @@
             const resultsContainer = document.getElementById('results-container');
             const errorMessage = document.getElementById('error-message');
             const loadingMessage = document.getElementById('loading-message');
+            const initialMessage = document.getElementById('initial-message');
+
+            // Helper function to hide all message containers
+            const hideMessages = () => {
+                errorMessage.classList.add('message-hidden');
+                loadingMessage.classList.add('message-hidden');
+                initialMessage.classList.add('message-hidden');
+            };
+
+            // Helper function to show a specific message
+            const showMessage = (element, messageText = '') => {
+                hideMessages();
+                element.querySelector('p').innerHTML = messageText;
+                element.classList.remove('message-hidden');
+            };
+
 
             const fetchData = async () => {
                 searchButton.disabled = true;
-                errorMessage.classList.add('error-hidden');
-                loadingMessage.style.display = 'block';
+                showMessage(loadingMessage, '<i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات الأولية...');
+                 resultsContainer.classList.add('results-hidden'); // Hide results while loading
+
 
                 try {
                     const response = await fetch(FULL_URL);
                     const text = await response.text();
-                    
-                    const json = JSON.parse(text.substring(47).slice(0, -2));
-                    const rows = json.table.rows;
 
-                    apartmentData = rows.map(row => {
+                    // Extract JSON part from Google Visualization API response
+                     // The string "google.visualization.Query.setResponse(" is typically found before the JSON
+                    const jsonString = text.substring(text.indexOf('{')).slice(0, -2);
+                    const json = JSON.parse(jsonString);
+
+                    if (!json.table || !json.table.rows) {
+                         // This might happen if the sheet is empty or structure is unexpected
+                        throw new Error('Data structure not as expected or sheet is empty.');
+                    }
+
+                    const rows = json.table.rows;
+                     // Check if the first row looks like a header row (e.g., first cell has a string value)
+                     // Adjust this logic if your sheet has a header but the first cell is numeric/empty
+                    const dataRows = (rows.length > 0 && rows[0].c[0] && typeof rows[0].c[0].v === 'string') ? rows.slice(1) : rows;
+
+                    if (dataRows.length === 0) {
+                         throw new Error('No data rows found after skipping header.');
+                    }
+
+
+                    apartmentData = dataRows.map(row => {
                         const cells = row.c;
-                        const getCellValue = (index) => (cells[index] && cells[index].v !== null) ? cells[index].v : '';
-                        
+                        // Ensure row has enough cells before accessing index
+                        const getCellValue = (index) => {
+                            if (cells && cells.length > index && cells[index] && cells[index].v !== null) {
+                                return cells[index].v;
+                            }
+                            return null; // Return null for missing or empty cells
+                        };
+
                         const safeParseFloat = (value) => {
+                            if (value === null) return null;
                             if (typeof value === 'number') return value;
                             if (typeof value === 'string' && value.trim() !== '') {
-                                const num = parseFloat(value.replace(/,/g, ''));
+                                const num = parseFloat(value.toString().replace(/[,\s]/g, '')); // Handle commas and spaces
                                 return isNaN(num) ? null : num;
                             }
                             return null;
                         };
 
                         const safeParseInt = (value) => {
-                            if (typeof value === 'number') return value;
+                             if (value === null) return null;
+                            if (typeof value === 'number') return parseInt(value, 10); // Convert number to int
                             if (typeof value === 'string' && value.trim() !== '') {
-                                const num = parseInt(value.replace(/,/g, ''), 10);
+                                const num = parseInt(value.toString().replace(/[,\s]/g, ''), 10); // Handle commas and spaces
                                 return isNaN(num) ? null : num;
                             }
                             return null;
                         };
 
+                        // --- Index Mapping based on your Sheet Columns (0-based) ---
+                        // A=0, B=1, C=2, D=3, E=4, F=5, G=6, H=7, I=8, J=9, K=10, L=11, M=12, N=13, O=14, P=15
                         return {
-                            city: getCellValue(15), area: getCellValue(14),
-                            buildingNumber: safeParseInt(getCellValue(13)), unitNumber: safeParseInt(getCellValue(12)),
-                            floor: getCellValue(11), space: safeParseInt(getCellValue(10)),
-                            excellenceRatio: safeParseFloat(getCellValue(9)), cashPrice: safeParseFloat(getCellValue(8)),
-                            jeddiyetHajz: safeParseInt(getCellValue(7)),
+                            city: getCellValue(15),          // P: المدينة
+                            area: getCellValue(14),          // O: المنطقة
+                            buildingNumber: safeParseInt(getCellValue(13)), // N: رقم العمارة
+                            unitNumber: safeParseInt(getCellValue(12)),   // M: رقم الوحدة
+                            floor: getCellValue(11),         // L: الدور
+                            space: safeParseInt(getCellValue(10)),      // K: المساحة
+                            excellenceRatio: getCellValue(9),// J: نسبه التميز (often text like '01.06', keep as is)
+                            cashPrice: safeParseFloat(getCellValue(8)),   // I: السعر النقدى
+                            jeddiyetHajz: safeParseFloat(getCellValue(7)), // H: جدديه الحجز (can be large, treat as float)
+
                             paymentPlans: {
-                                years7: { installment: safeParseFloat(getCellValue(2)), completion: safeParseFloat(getCellValue(1)) },
-                                years5: { installment: safeParseFloat(getCellValue(4)), completion: safeParseFloat(getCellValue(3)) },
-                                years3: { installment: safeParseFloat(getCellValue(6)), completion: safeParseFloat(getCellValue(5)) }
+                                // Corrected indices based on Sheet: A=0, B=1, C=2, D=3, E=4, F=5
+                                years7: { installment: safeParseFloat(getCellValue(0)), completion: getCellValue(1) }, // A (0) for Installment, B (1) for Completion (keep completion as string for text like "استكمال الـ...")
+                                years5: { installment: safeParseFloat(getCellValue(2)), completion: getCellValue(3) }, // C (2) for Installment, D (3) for Completion
+                                years3: { installment: safeParseFloat(getCellValue(4)), completion: getCellValue(5) }  // E (4) for Installment, F (5) for Completion
                             }
                         };
-                    });
+                    }).filter(apt => apt.buildingNumber !== null && apt.unitNumber !== null); // Filter out rows missing key identifiers
 
-                    loadingMessage.style.display = 'none';
+
+                    hideMessages(); // Hide loading message
+                    showMessage(initialMessage, '<i class="fas fa-info-circle"></i> البيانات جاهزة للبحث. الرجاء إدخال رقم العمارة ورقم الوحدة.');
                     searchButton.disabled = false;
-                    
+
                 } catch (error) {
                     console.error('فشل في جلب البيانات من جوجل شيت:', error);
-                    loadingMessage.style.display = 'none';
-                    errorMessage.querySelector('p').innerHTML = `<i class="fas fa-exclamation-triangle"></i> فشل في تحميل البيانات. تأكد من نشر الملف على الويب بشكل صحيح.`;
-                    errorMessage.classList.remove('error-hidden');
+                    showMessage(errorMessage, `<i class="fas fa-exclamation-triangle"></i> فشل في تحميل البيانات الأولية. تأكد من نشر الملف على الويب بشكل صحيح ومن هيكل البيانات.<br> التفاصيل: ${error.message}`);
+                    searchButton.disabled = true; // Disable search if data fetching fails
+                    resultsContainer.classList.add('results-hidden'); // Ensure results are hidden
                 }
             };
 
             const handleSearch = () => {
-                const buildingNum = parseInt(buildingInput.value);
-                const unitNum = parseInt(unitInput.value);
+                const buildingNumStr = buildingInput.value.trim();
+                const unitNumStr = unitInput.value.trim();
 
-                resultsContainer.classList.add('results-hidden');
+                hideMessages(); // Hide any previous message
+                resultsContainer.classList.add('results-hidden'); // Hide results container
 
-                if (!buildingNum || !unitNum) {
-                    errorMessage.querySelector('p').innerHTML = '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال رقم العمارة ورقم الشقة.';
-                    errorMessage.classList.remove('error-hidden');
+                if (!buildingNumStr || !unitNumStr) {
+                    showMessage(errorMessage, '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال رقم العمارة ورقم الوحدة.');
                     return;
                 }
 
-                const foundApartment = apartmentData.find(apt => 
+                const buildingNum = parseInt(buildingNumStr, 10);
+                const unitNum = parseInt(unitNumStr, 10);
+
+                 if (isNaN(buildingNum) || isNaN(unitNum)) {
+                     showMessage(errorMessage, '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال أرقام صحيحة في حقلي العمارة والوحدة.');
+                     return;
+                 }
+
+
+                const foundApartment = apartmentData.find(apt =>
                     apt.buildingNumber === buildingNum && apt.unitNumber === unitNum
                 );
 
                 if (foundApartment) {
                     displayResults(foundApartment);
-                    errorMessage.classList.add('error-hidden');
-                    setTimeout(() => {
-                         resultsContainer.classList.remove('results-hidden');
-                    }, 100);
+                    resultsContainer.classList.remove('results-hidden'); // Show results
+                     // Scroll to results smoothly
+                     resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 } else {
-                    errorMessage.querySelector('p').innerHTML = '<i class="fas fa-exclamation-triangle"></i> لم يتم العثور على الوحدة المطلوبة. يرجى التأكد من الأرقام المدخلة.';
-                    errorMessage.classList.remove('error-hidden');
+                    showMessage(errorMessage, '<i class="fas fa-exclamation-triangle"></i> لم يتم العثور على الوحدة المطلوبة. يرجى التأكد من الأرقام المدخلة.');
                 }
             };
-            
+
             const displayResults = (data) => {
-                const formatNumber = (num) => (num !== null && !isNaN(num)) ? num.toLocaleString('en-US') : 'غير متاح';
-            
-                document.getElementById('res-city').textContent = data.city || 'N/A';
-                document.getElementById('res-area').textContent = data.area || 'N/A';
-                document.getElementById('res-building-number').textContent = data.buildingNumber || 'N/A';
-                document.getElementById('res-unit-number').textContent = data.unitNumber || 'N/A';
-                document.getElementById('res-floor').textContent = data.floor || 'N/A';
+                 // Helper to format numbers, show 'غير متاح' for null/NaN, add commas
+                const formatNumber = (num) => {
+                    if (num === null || isNaN(num)) {
+                        return 'غير متاح';
+                    }
+                    // Format with commas for thousands separator, max 2 decimal places
+                     return parseFloat(num).toLocaleString('en-US', { maximumFractionDigits: 2 });
+                };
+
+                // Helper to display text values or 'غير متاح'
+                 const formatText = (text) => {
+                     return (text !== null && text !== '') ? text : 'غير متاح';
+                 };
+
+                // Populate general details
+                document.getElementById('res-city').textContent = formatText(data.city);
+                document.getElementById('res-area').textContent = formatText(data.area);
+                document.getElementById('res-building-number').textContent = formatText(data.buildingNumber);
+                document.getElementById('res-unit-number').textContent = formatText(data.unitNumber);
+                document.getElementById('res-floor').textContent = formatText(data.floor);
                 document.getElementById('res-space').textContent = formatNumber(data.space);
-                document.getElementById('res-excellence-ratio').textContent = data.excellenceRatio || 'N/A';
+                document.getElementById('res-excellence-ratio').textContent = formatText(data.excellenceRatio); // Display as is
                 document.getElementById('res-jeddiyet-hajz').textContent = formatNumber(data.jeddiyetHajz);
                 document.getElementById('res-cash-price').textContent = formatNumber(data.cashPrice);
-                
-                document.getElementById('res-3y-completion').textContent = formatNumber(data.paymentPlans.years3.completion);
+
+                // Populate payment plan details
+                // Note: The order here doesn't matter, it's controlled by the HTML structure
+                document.getElementById('res-3y-completion').textContent = formatText(data.paymentPlans.years3.completion);
                 document.getElementById('res-3y-installment').textContent = formatNumber(data.paymentPlans.years3.installment);
-            
-                document.getElementById('res-5y-completion').textContent = formatNumber(data.paymentPlans.years5.completion);
+
+                document.getElementById('res-5y-completion').textContent = formatText(data.paymentPlans.years5.completion);
                 document.getElementById('res-5y-installment').textContent = formatNumber(data.paymentPlans.years5.installment);
-            
-                document.getElementById('res-7y-completion').textContent = formatNumber(data.paymentPlans.years7.completion);
+
+                document.getElementById('res-7y-completion').textContent = formatText(data.paymentPlans.years7.completion);
                 document.getElementById('res-7y-installment').textContent = formatNumber(data.paymentPlans.years7.installment);
             };
 
+            // Event listeners for search button and input fields
             searchButton.addEventListener('click', handleSearch);
             unitInput.addEventListener('keypress', (e) => e.key === 'Enter' && handleSearch());
             buildingInput.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
-                    unitInput.focus();
+                    unitInput.focus(); // Move focus to unit number on Enter
                 }
             });
 
+            // Fetch data when the page loads
             fetchData();
         });
     </script>
