@@ -44,11 +44,15 @@
             background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
             color: var(--text-color);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         .container {
             max-width: 900px;
             margin: auto;
+            width: 100%;
+            flex-grow: 1;
         }
 
         .main-title {
@@ -217,6 +221,28 @@
             font-weight: 500;
         }
 
+        /* Footer Style */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            color: var(--text-light-color);
+            font-size: 0.9rem;
+            animation: fadeInUp 1.5s ease-out;
+        }
+        .footer p {
+            margin: 0.25rem 0;
+        }
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+
         @media (max-width: 768px) {
             body { padding: 1rem; }
             .main-title { font-size: 2rem; }
@@ -297,6 +323,11 @@
         </div>
     </div>
 
+    <footer class="footer">
+        <p>تطوير: المهندس محمد سعيد | <a href="tel:01000023099">01000023099</a></p>
+        <p>من ملاك الكمبوند</p>
+    </footer>
+
     <!-- ========== Start of JavaScript Code ========== -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -354,9 +385,9 @@
                             excellenceRatio: safeParseFloat(getCellValue(9)), cashPrice: safeParseFloat(getCellValue(8)),
                             jeddiyetHajz: safeParseInt(getCellValue(7)),
                             paymentPlans: {
-                                years3: { completion: safeParseFloat(getCellValue(6)), installment: safeParseFloat(getCellValue(5)) },
+                                years7: { completion: safeParseFloat(getCellValue(2)), installment: safeParseFloat(getCellValue(1)) },
                                 years5: { completion: safeParseFloat(getCellValue(4)), installment: safeParseFloat(getCellValue(3)) },
-                                years7: { completion: safeParseFloat(getCellValue(2)), installment: safeParseFloat(getCellValue(1)) }
+                                years3: { completion: safeParseFloat(getCellValue(6)), installment: safeParseFloat(getCellValue(5)) }
                             }
                         };
                     });
@@ -367,7 +398,7 @@
                 } catch (error) {
                     console.error('فشل في جلب البيانات من جوجل شيت:', error);
                     loadingMessage.style.display = 'none';
-                    errorMessage.querySelector('p').innerHTML = `<i class="fas fa-exclamation-triangle"></i> فشل في تحميل البيانات. تأكد من نشر الملف على الويب بشكل صحيح وأن لديك اتصال بالإنترنت.`;
+                    errorMessage.querySelector('p').innerHTML = `<i class="fas fa-exclamation-triangle"></i> فشل في تحميل البيانات. تأكد من نشر الملف على الويب بشكل صحيح.`;
                     errorMessage.classList.remove('error-hidden');
                 }
             };
@@ -376,7 +407,7 @@
                 const buildingNum = parseInt(buildingInput.value);
                 const unitNum = parseInt(unitInput.value);
 
-                resultsContainer.classList.add('results-hidden'); // إخفاء النتائج القديمة قبل البحث
+                resultsContainer.classList.add('results-hidden');
 
                 if (!buildingNum || !unitNum) {
                     errorMessage.querySelector('p').innerHTML = '<i class="fas fa-exclamation-triangle"></i> الرجاء إدخال رقم العمارة ورقم الشقة.';
@@ -391,7 +422,7 @@
                 if (foundApartment) {
                     displayResults(foundApartment);
                     errorMessage.classList.add('error-hidden');
-                    setTimeout(() => { // تأخير بسيط لإعطاء فرصة للحركة
+                    setTimeout(() => {
                          resultsContainer.classList.remove('results-hidden');
                     }, 100);
                 } else {
